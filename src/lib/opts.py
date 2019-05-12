@@ -12,7 +12,7 @@ class opts(object):
     # basic experiment setting
     self.parser.add_argument('task', default='ctdet',
                              help='ctdet | ddd | multi_pose | exdet')
-    self.parser.add_argument('--dataset', default='coco',
+    self.parser.add_argument('--dataset', default='football',
                              help='coco | kitti | coco_hp | pascal')
     self.parser.add_argument('--exp_id', default='default')
     self.parser.add_argument('--test', action='store_true')
@@ -52,7 +52,7 @@ class opts(object):
                              help='save model to disk every 5 epochs.')
     self.parser.add_argument('--metric', default='loss', 
                              help='main metric to save best model')
-    self.parser.add_argument('--vis_thresh', type=float, default=0.3,
+    self.parser.add_argument('--vis_thresh', type=float, default=0.5,
                              help='visualization threshold.')
     self.parser.add_argument('--debugger_theme', default='white', 
                              choices=['white', 'black'])
@@ -335,9 +335,9 @@ class opts(object):
 
   def init(self, args=''):
     default_dataset_info = {
-      'ctdet': {'default_resolution': [512, 512], 'num_classes': 80, 
+      'ctdet': {'default_resolution': [256, 256], 'num_classes': 2,
                 'mean': [0.408, 0.447, 0.470], 'std': [0.289, 0.274, 0.278],
-                'dataset': 'coco'},
+                'dataset': 'football'},
       'exdet': {'default_resolution': [512, 512], 'num_classes': 80, 
                 'mean': [0.408, 0.447, 0.470], 'std': [0.289, 0.274, 0.278],
                 'dataset': 'coco'},

@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+import sys
 
 import time
 import torch
@@ -21,6 +22,7 @@ class ModleWithLoss(torch.nn.Module):
     return outputs[-1], loss, loss_stats
 
 class BaseTrainer(object):
+  start = None
   def __init__(
     self, opt, model, optimizer=None):
     self.opt = opt
@@ -42,6 +44,8 @@ class BaseTrainer(object):
           state[k] = v.to(device=device, non_blocking=True)
 
   def run_epoch(self, phase, epoch, data_loader):
+    if epoch == 0:
+      start = time()
     model_with_loss = self.model_with_loss
     if phase == 'train':
       model_with_loss.train()
@@ -56,7 +60,7 @@ class BaseTrainer(object):
     data_time, batch_time = AverageMeter(), AverageMeter()
     avg_loss_stats = {l: AverageMeter() for l in self.loss_stats}
     num_iters = len(data_loader) if opt.num_iters < 0 else opt.num_iters
-    bar = Bar('{}/{}'.format(opt.task, opt.exp_id), max=num_iters)
+    bar = Bar("", max=num_iters)
     end = time.time()
     for iter_id, batch in enumerate(data_loader):
       if iter_id >= num_iters:
@@ -88,6 +92,9 @@ class BaseTrainer(object):
       if opt.print_iter > 0:
         if iter_id % opt.print_iter == 0:
           print('{}/{}| {}'.format(opt.task, opt.exp_id, Bar.suffix)) 
+      elif opt.print_iter == -1:
+        if (iter_id + 1) % num_iters == 0:
+          print(Bar.suffix)
       else:
         bar.next()
       
